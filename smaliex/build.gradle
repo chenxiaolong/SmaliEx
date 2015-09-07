@@ -20,10 +20,6 @@ tasks.withType(JavaCompile) {
 task fatJar(type: Jar, dependsOn: jar) {
     from sourceSets.main.output
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-
-    manifest {
-        attributes("Main-Class": "org.rh.smaliex.Main")
-    }
 }
 tasks.getByPath('build').dependsOn(fatJar)
 
@@ -39,7 +35,6 @@ task proguard(type: proguard.gradle.ProGuardTask, dependsOn: fatJar) {
     dontoptimize
     keepattributes '*Annotation*'
     keepattributes 'Signature'
-    keep 'public class org.rh.smaliex.Main { public static void main(java.lang.String[]); }'
     keepclassmembers 'enum * { public static **[] values(); public static ** valueOf(java.lang.String); }'
     dontwarn 'com.google.common.**'
     dontnote 'com.google.common.**'
