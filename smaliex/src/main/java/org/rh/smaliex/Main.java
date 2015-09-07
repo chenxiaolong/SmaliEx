@@ -58,15 +58,24 @@ public class Main {
         if (args.length == 2) {
             if ("boot".equals(cmd)) {
                 checkExist(args[1]);
-                OatUtil.bootOat2Dex(args[1]);
+                try {
+                    OatUtil.bootOat2Dex(args[1]);
+                } catch (IOException e) {
+                }
                 return;
             }
             if ("odex".equals(cmd)) {
-                OatUtil.extractOdexFromOat(checkExist(args[1]), null);
+                try {
+                    OatUtil.extractOdexFromOat(checkExist(args[1]), null);
+                } catch (IOException e) {
+                }
                 return;
             }
             if ("smali".equals(cmd)) {
-                OatUtil.smaliRaw(checkExist(args[1]));
+                try {
+                    OatUtil.smaliRaw(checkExist(args[1]));
+                } catch (IOException e) {
+                }
                 return;
             }
             checkExist(args[0]);

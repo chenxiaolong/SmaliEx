@@ -66,7 +66,7 @@ import org.rh.smaliex.reader.Oat;
 
 public class OatUtil {
 
-    public static void smaliRaw(File inputFile) {
+    public static void smaliRaw(File inputFile) throws IOException {
         if (!inputFile.isFile()) {
             LLog.i(inputFile + " is not a file.");
         }
@@ -94,6 +94,7 @@ public class OatUtil {
                 }
             } catch (IOException ex) {
                 LLog.ex(ex);
+                throw ex;
             }
         } else {
             dexFiles = DexUtil.loadMultiDex(inputFile, opc);
@@ -116,7 +117,7 @@ public class OatUtil {
     }
 
     // A sample to de-optimize system folder of an extracted ROM
-    public static void deOptimizeFiles(String systemFolder, String workingDir) {
+    public static void deOptimizeFiles(String systemFolder, String workingDir) throws IOException {
         File bootOat = new File(MiscUtil.path(systemFolder, "framework", "arm", "boot.oat"));
         if (!bootOat.exists()) {
             LLog.i(bootOat + " not found");
@@ -129,6 +130,7 @@ public class OatUtil {
                     outputJarFolder);
         } catch (IOException ex) {
             LLog.ex(ex);
+            throw ex;
         }
     }
 
@@ -140,14 +142,14 @@ public class OatUtil {
         extractDexFromBootOat(bootOat, outputJarFolder, bootClassPathFolder, noClassJarFolder);
     }
 
-    public static void bootOat2Dex(String bootOat) {
+    public static void bootOat2Dex(String bootOat) throws IOException {
         File odexFolder = prepareOdex(bootOat);
         File outputJarFolder = new File(new File(bootOat).getParent(), "dex");
         extractDexFromBootOat(bootOat, outputJarFolder.getAbsolutePath(),
                 odexFolder.getAbsolutePath(), null);
     }
 
-    private static File prepareOdex(String bootOat) {
+    private static File prepareOdex(String bootOat) throws IOException {
         File oatFile = new File(bootOat);
         File odexFolder = new File(oatFile.getParentFile(), "odex");
         odexFolder.mkdirs();
@@ -174,7 +176,7 @@ public class OatUtil {
         throw new IOException("oat not found");
     }
 
-    public static ArrayList<String> getBootJarNames(String bootOat) {
+    public static ArrayList<String> getBootJarNames(String bootOat) throws IOException {
         ArrayList<String> names = new ArrayList<>();
         try (Elf e = new Elf(bootOat)) {
             Oat oat = getOat(e);
@@ -187,6 +189,7 @@ public class OatUtil {
             }
         } catch (IOException ex) {
             LLog.ex(ex);
+            throw ex;
         }
         return names;
     }
@@ -201,7 +204,7 @@ public class OatUtil {
     }
 
     // Get optimized dex from oat
-    public static void extractOdexFromOat(File oatFile, File outputFolder) {
+    public static void extractOdexFromOat(File oatFile, File outputFolder) throws IOException {
         try (Elf e = new Elf(oatFile)) {
             Oat oat = getOat(e);
             for (int i = 0; i < oat.mDexFiles.length; i++) {
@@ -218,11 +221,12 @@ public class OatUtil {
             }
         } catch (IOException ex) {
             LLog.ex(ex);
+            throw ex;
         }
     }
 
     public static void extractDexFromBootOat(String oatFile, String outputFolder,
-            String bootClassPath, String noClassJarFolder) {
+            String bootClassPath, String noClassJarFolder) throws IOException {
         try (Elf e = new Elf(oatFile)) {
             Oat oat = getOat(e);
             File outFolder = new File(outputFolder);
@@ -236,6 +240,7 @@ public class OatUtil {
             }
         } catch (IOException ex) {
             LLog.ex(ex);
+            throw ex;
         }
     }
 
@@ -414,6 +419,7 @@ public class OatUtil {
                 LLog.i("Output " + outputFile);
             } catch (IOException e) {
                 LLog.ex(e);
+                throw e;
             }
         }
     }
