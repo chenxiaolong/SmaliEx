@@ -313,11 +313,9 @@ public class OatUtil {
             }
 
             if (outputFile.exists()) {
-                File old = outputFile;
-                outputFile = MiscUtil.appendTail(outputFile, "-deodex");
-                LLog.i(old + " already existed, use name " + outputFile.getName());
+                outputFile.delete();
             }
-            DexPool.writeTo(outputFile.getAbsolutePath() , d);
+            DexPool.writeTo(outputFile.getAbsolutePath(), d);
             LLog.i("Output to " + outputFile);
         }
     }
