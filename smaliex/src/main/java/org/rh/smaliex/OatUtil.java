@@ -284,9 +284,9 @@ public class OatUtil {
     private static void convertToDex(Oat oat, File outputFolder,
             String bootClassPath, boolean addSelfToBcp) throws IOException {
         final Opcodes opcodes = new Opcodes(oat.guessApiLevel());
-        LLog.i("Preparing bootclasspath from " + bootClassPath);
+
         if (bootClassPath == null || !new File(bootClassPath).exists()) {
-            LLog.e("Invalid bootclasspath: " + bootClassPath);
+            throw new IOException("Invalid bootclasspath: " + bootClassPath);
         }
         final OatDexRewriterModule odr = new OatDexRewriterModule(bootClassPath, opcodes);
         final DexRewriter deOpt = odr.getRewriter();
