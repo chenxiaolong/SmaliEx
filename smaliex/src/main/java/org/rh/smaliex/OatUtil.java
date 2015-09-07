@@ -157,12 +157,10 @@ public class OatUtil {
         return odexFolder;
     }
 
-    public static void oat2dex(String oatFile, String bootClassPath) throws IOException {
+    public static void oat2dex(String oatFile, String bootClassPath, String outputFolder) throws IOException {
         try (Elf e = new Elf(oatFile)) {
             Oat oat = getOat(e);
-            File outFolder = new File(oatFile).getAbsoluteFile().getParentFile();
-            outFolder.mkdirs();
-            convertToDex(oat, outFolder, bootClassPath, true);
+            convertToDex(oat, new File(outputFolder), bootClassPath, true);
         }
     }
 
